@@ -45,11 +45,15 @@ class UserController extends Controller
                 return response()->json(['message' => 'Invalid login credentials'], 401);
             }
 
+
+            $expiresIn = Auth::guard('api')->factory()->getTTL() * 60;
+
             $user = Auth::guard('api')->user();
 
             return response()->json([
                 'user' => $user,
                 'jwt' => $token,
+                'expires_in' => $expiresIn
             ]);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Error during login', 'error' => $e->getMessage()], 500);
@@ -60,6 +64,28 @@ class UserController extends Controller
     {
         $user = Auth::guard('api')->user();
         return response()->json($user, 200);
+    }
+
+
+
+    public function refresh()
+    {
+        try {
+            $newToken = Auth::guard('api')->refresh();
+
+            $expiresIn = Auth::guard('api')->factory()->getTTL() * 60;
+            $user = Auth::guard('api')->user();
+
+            return response()->json([
+                'user' => $user,
+                'jwt' => $newToken,
+                'expires_in' => $expiresIn,
+            ]);
+        } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+            return response()->json(['message' => 'Invalid token, unable to refresh'], 401);
+        } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
+            return response()->json(['message' => 'Token refresh failed'], 500);
+        }
     }
 
 
@@ -100,7 +126,7 @@ class UserController extends Controller
         }
 
         $user->fill([
-            'full_name' => $validatedData['fullName'] ?? $user->full_name,
+            'fullName' => $validatedData['fullName'] ?? $user->fullName,
             'username' => $validatedData['username'] ?? $user->username,
             'email' => $validatedData['email'] ?? $user->email,
             'biography' => $validatedData['biography'] ?? $user->biography,

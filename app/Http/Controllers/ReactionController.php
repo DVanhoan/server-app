@@ -8,15 +8,6 @@ use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class ReactionController extends Controller
 {
-    public function getReactionImage($filename)
-    {
-        $url = cloudinary()->getImage($filename)->toUrl();
-        if ($url) {
-            return response()->file($url);
-        }
-        return response()->json(['error' => 'Image not found'], 404);
-    }
-
 
     public function getReactionsOnPost($postId)
     {
@@ -27,22 +18,20 @@ class ReactionController extends Controller
 
     public function react(Request $request)
     {
-        if (!$request->hasFile('reaction')) {
-            return response()->json(['error' => 'No reaction image uploaded'], 400);
-        }
-        $file = $request->file('reaction');
-        if (!$file->isValid()) {
-            return response()->json(['error' => 'Invalid reaction image'], 400);
-        }
-        $filename = Cloudinary::upload($file->getRealPath())->getSecurePath();
+        $request->validate([
+            'user_id' => 'required|integer',
+            'post'    => 'required|integer',
+            'reaction' => 'required|string|in:happy,sad,angry,wow,haha,love'
+        ]);
 
         $reaction = Reaction::create([
             'user_id'       => $request->input('user_id'),
-            'username'      => $request->input('username'),
             'post_id'       => $request->input('post'),
-            'image_name'    => $filename,
+            'reaction_type' => $request->input('reaction'),
             'reaction_time' => now()
         ]);
+
         return response()->json($reaction, 201);
     }
+
 }

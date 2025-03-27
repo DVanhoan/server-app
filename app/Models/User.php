@@ -75,6 +75,19 @@ class User extends Authenticatable implements JWTSubject
             ->wherePivot('status', 'accepted');
     }
 
+    public function conversations()
+    {
+        return $this->belongsToMany(Conversation::class, 'conversation_members')
+            ->withPivot('is_admin', 'joined_at')
+            ->withTimestamps();
+    }
+
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class, 'sender_id');
+    }
+
 
     public function getJWTIdentifier()
     {

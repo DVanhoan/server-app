@@ -12,7 +12,7 @@ class Reaction extends Model
     protected $fillable = [
         'user_id',
         'post_id',
-        'image_name',
+        'reaction_type',
         'reaction_time'
     ];
 
