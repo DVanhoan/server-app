@@ -45,7 +45,6 @@ class UserController extends Controller
                 return response()->json(['message' => 'Invalid login credentials'], 401);
             }
 
-
             $expiresIn = Auth::guard('api')->factory()->getTTL() * 60;
 
             $user = Auth::guard('api')->user();
