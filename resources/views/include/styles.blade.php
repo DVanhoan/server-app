@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="{{ secure_asset('icon/style.css') }}">
 <link rel="shortcut icon" href="{{ secure_asset('images/favicon.ico') }}">
 <link rel="apple-touch-icon-precomposed" href="{{ secure_asset('images/favicon.ico') }}">
-<link rel="stylesheet" type="text/css" href="{{assecure_assetset('css/sweetalert.min.css')}}">
+<link rel="stylesheet" type="text/css" href="{{secure_asset('css/sweetalert.min.css')}}">
 <link rel="stylesheet" type="text/css" href="{{ secure_asset('css/custom.css') }}">
 @yield('custom-css')
 @stack("styles")
