@@ -4,7 +4,7 @@
             <a href="index-2.html">
                 <img class="" id="logo_header_mobile" alt="" src="{{ secure_asset('images/logo.png') }}"
                     data-light="{{ secure_asset('images/logo.png') }}" data-dark="{{ secure_asset('images/logo.png') }}"
-                    data-width="154px" data-height="52px" data-retina="{{ secure_asset('images/logo/log.png') }}">
+                    data-width="154px" data-height="52px" data-retina="{{ secure_asset('images/logo/logo.png') }}">
             </a>
             <div class="button-show-hide">
                 <i class="icon-menu-left"></i>
