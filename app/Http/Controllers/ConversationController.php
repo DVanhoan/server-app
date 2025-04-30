@@ -108,41 +108,47 @@ class ConversationController extends Controller
     public function show($id)
     {
         $user = auth()->user();
-
         if (!$user) {
             return response()->json(['message' => 'User not authenticated'], 401);
         }
 
         $conversation = $user->conversations()
-            ->with(['messages.sender', 'members.user'])
+            ->with(['members.user'])
             ->find($id);
 
         if (!$conversation) {
             return response()->json(['message' => 'Conversation not found'], 404);
         }
 
-        return response()->json([
-            'id' => $conversation->id,
-            'type' => $conversation->type,
-            'name' => $conversation->name,
-            'messages' => $conversation->messages->map(function ($message) {
+        $messages = $conversation
+            ->messages()
+            ->with('sender')
+            ->orderBy('created_at', 'asc')
+            ->get()
+            ->map(function ($message) {
                 return [
-                    'id' => $message->id,
-                    'isSender' => $message->sender_id === auth()->id(),
-                    'sender' => $message->sender,
-                    'content' => $message->content,
-                    'created_at' => $message->created_at->format('H:i A'),
-                    'profile_picture' => $message->sender->profile_picture,
+                    'id'         => $message->id,
+                    'isSender'   => $message->sender_id === auth()->id(),
+                    'sender'     => $message->sender,
+                    'content'     => $message->content,
+                    'created_at'  => $message->created_at->format('H:i A'),
                 ];
-            }),
+            });
 
-            'members' => $conversation->members->map(function ($member) {
-                return [
-                    'id' => $member->user->id,
-                    'username' => $member->user->username,
-                    'profile_picture' => $member->user->profile_picture,
-                ];
-            }),
+        $members = $conversation->members->map(function ($member) {
+            return [
+                'id'              => $member->user->id,
+                'username'        => $member->user->username,
+                'profile_picture' => $member->user->profile_picture ?: '',
+            ];
+        });
+
+        return response()->json([
+            'id'       => $conversation->id,
+            'type'     => $conversation->type,
+            'name'     => $conversation->name,
+            'messages' => $messages,
+            'members'  => $members,
         ]);
     }
 }
