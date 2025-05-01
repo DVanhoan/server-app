@@ -48,13 +48,6 @@ class ConversationController extends Controller
             ->values()
             ->toArray();
 
-        $recentConversation = $user->conversations()
-            ->join('messages', 'conversations.id', '=', 'messages.conversation_id')
-            ->select('conversations.*')
-            ->orderBy('messages.updated_at', 'desc')
-            ->first();
-
-
 
         return response()->json([
             'conversations' => $conversations
@@ -131,7 +124,9 @@ class ConversationController extends Controller
                     'isSender'   => $message->sender_id === auth()->id(),
                     'sender'     => $message->sender,
                     'content'     => $message->content,
+                    'image_url'  => $message->image_url,
                     'created_at'  => $message->created_at->format('H:i A'),
+                    'conversation_id' => $message->conversation_id
                 ];
             });
 

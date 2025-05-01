@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PostCreated;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
@@ -81,6 +82,12 @@ class PostController extends Controller
             'posting_time' => now(),
             'deleted'      => false,
         ]);
+
+        $friends = $post->user->friends()->pluck('id')->toArray();
+        event(new PostCreated($post, $friends));
+
+
+
         return response()->json($post, 201);
     }
 

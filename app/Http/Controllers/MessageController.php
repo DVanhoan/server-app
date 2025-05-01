@@ -63,6 +63,8 @@ class MessageController extends Controller
             'isSender'        => true,
             'sender'          => $message->sender,
             'content'         => $message->content,
+            'image_url'       => $message->image_url,
+            'conversation_id' => $message->conversation_id,
             'created_at'      => $message->created_at->format('H:i A')
         ];
 

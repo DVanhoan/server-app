@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\FriendRequestSent;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Friendship;
 use Illuminate\Support\Facades\Auth;
@@ -11,14 +13,25 @@ class FriendshipController extends Controller
 
     public function addFriend($userId, Request $request)
     {
-        $user = Auth::guard('api')->user();
-        $currentUserId = $user->id;
+        $user_sender = Auth::guard('api')->user();
+        $currentUserId = $user_sender->id;
         $friendship = Friendship::create(attributes: [
             'user1_id' => $currentUserId,
             'user2_id' => $userId,
             'status'   => 'pending',
             'since'    => now()
         ]);
+
+        $user_receiving = User::find($userId);
+
+        event(new FriendRequestSent($user_sender, $user_receiving));
+        $user_receiving->notifications()->create([
+            'type' => 'FriendRequestSent',
+            'data' => json_encode($this->data),
+            'notifiable_type'=>'App\Models\User',
+            'notifiable_id'=> $user_sender->id,
+        ]);
+
         return response()->json($friendship, 201);
     }
 

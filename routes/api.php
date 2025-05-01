@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\MessageController;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\UserController;
@@ -9,6 +10,8 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\FriendshipController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ReactionController;
+
+Broadcast::routes(['middleware' => ['auth:api']]);
 
 Route::prefix('v1')->group(function () {
     Route::prefix('users')->group(function () {
