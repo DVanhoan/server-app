@@ -92,7 +92,7 @@ class ConversationController extends Controller
 
         return response()->json([
             'status'       => 'success',
-            'conversation' => $conversation->load('members.user'),
+            'conversationId' => $conversation->id
         ]);
     }
 
