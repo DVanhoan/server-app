@@ -65,7 +65,7 @@ class UserController extends Controller
         $user = $this->userService->register($request);
 
         if ($user) {
-            auth()->guard('web')->login($user);
+            auth()->login($user);
             Alert::success('Registration successfully');
             return redirect()->route('admin');
         }
@@ -74,4 +74,6 @@ class UserController extends Controller
             return back();
         }
     }
+
+
 }

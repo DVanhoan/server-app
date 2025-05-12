@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 
@@ -44,6 +45,7 @@ Route::prefix('v1')->group(function () {
             Route::patch('accept/{userId}', [FriendshipController::class, 'acceptFriendRequest']);
             Route::patch('reject/{userId}', [FriendshipController::class, 'rejectFriend']);
             Route::get('pending', [FriendshipController::class, 'getPendingRequests']);
+            Route::get('sent', [FriendshipController::class, 'getSentRequests']);
             Route::get('friends', [FriendshipController::class, 'getListOfFriends']);
         });
 
@@ -61,5 +63,7 @@ Route::prefix('v1')->group(function () {
         Route::get('conversation', [ConversationController::class, 'index']);
         Route::post('conversation', [ConversationController::class, 'create']);
 
+        Route::get('notifications', [NotificationController::class, 'index']);
+        Route::post('notification/mark-as-read', [NotificationController::class, 'markAsRead']);
     });
 });

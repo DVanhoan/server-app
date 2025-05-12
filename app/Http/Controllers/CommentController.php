@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use App\Models\Comment;
 use Illuminate\Support\Facades\Auth;
@@ -30,6 +31,7 @@ class CommentController extends Controller
             'username'     => $auth->username,
             'comment_time' => now()
         ]);
+
         return response()->json($comment, 201);
     }
 }

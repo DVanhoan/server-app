@@ -25,11 +25,17 @@ class FriendshipController extends Controller
         $user_receiving = User::find($userId);
 
         event(new FriendRequestSent($user_sender, $user_receiving));
+
+        $data = [
+            'message' => 'Gửi lời mời kết bạn cho bạn',
+            'sender_id' => $user_sender->id,
+            'sender_name' => $user_sender->fullName
+        ];
         $user_receiving->notifications()->create([
             'type' => 'FriendRequestSent',
-            'data' => json_encode($this->data),
-            'notifiable_type'=>'App\Models\User',
-            'notifiable_id'=> $user_sender->id,
+            'data' => json_encode($data),
+            'notifiable_type' => 'App\Models\User',
+            'notifiable_id' => 2,
         ]);
 
         return response()->json($friendship, 201);
@@ -76,6 +82,17 @@ class FriendshipController extends Controller
             ->get();
         return response()->json($pending, 200);
     }
+
+
+    public function getSentRequests()
+    {
+        $user = Auth::guard('api')->user();
+        $sent = Friendship::where('user1_id', $user->id)
+            ->where('status', 'pending')
+            ->get();
+        return response()->json($sent, 200);
+    }
+
 
 
     public function getListOfFriends()
