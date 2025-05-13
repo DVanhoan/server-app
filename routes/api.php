@@ -39,7 +39,6 @@ Route::prefix('v1')->group(function () {
             Route::get('post/all', [PostController::class, 'getAllPosts']);
         });
 
-
         Route::prefix('friendlist')->group(function () {
             Route::post('add/{userId}', [FriendshipController::class, 'addFriend']);
             Route::patch('accept/{userId}', [FriendshipController::class, 'acceptFriendRequest']);
@@ -49,14 +48,11 @@ Route::prefix('v1')->group(function () {
             Route::get('friends', [FriendshipController::class, 'getListOfFriends']);
         });
 
-
         Route::get('comment/post/{postId}', [CommentController::class, 'getCommentsOnPost']);
         Route::post('comment', [CommentController::class, 'comment']);
 
-
         Route::get('reaction/post/{postId}', [ReactionController::class, 'getReactionsOnPost']);
         Route::post('reaction', [ReactionController::class, 'react']);
-
 
         Route::post('message/send', [MessageController::class, 'send']);
         Route::get('conversation/{conversationId}', [ConversationController::class, 'show']);
