@@ -69,7 +69,7 @@ class MessageController extends Controller
         ];
 
         broadcast(new MessageSent($message))->toOthers();
-
+        Log:info('');
         return response()->json($payload, 200);
     }
 }
