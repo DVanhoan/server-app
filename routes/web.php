@@ -26,5 +26,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('posts/{postId}/destroy', [PostController::class, 'destroy'])->name('posts.destroy');
     Route::get('/posts/{post}/comments', [PostController::class, 'showComment'])->name('posts.showComment');
 
+
     Route::delete('/posts/{commentId}/comments', [CommentController::class, 'destroy'])->name('comments.delete');
 });
